@@ -1,0 +1,33 @@
+{
+  "name": "react-tree",
+  "version": "1.0.0",
+  "description": "Node tool which creates visualization of react component dependencies as a tree",
+  "main": "index.js",
+  "scope": "jgfranco",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JGFranco/reactTree.git"
+  },
+  "keywords": [
+    "react",
+    "tree",
+    "documentation"
+  ],
+  "author": "JGFranco",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/JGFranco/reactTree/issues"
+  },
+  "homepage": "https://github.com/JGFranco/reactTree#readme",
+  "dependencies": {
+    "react-docgen": "^2.13.0",
+    "react-docgen-exports-handler": "^1.0.0",
+    "react-docgen-imports-handler": "^1.0.0"
+  },
+  "bin": {
+    "react-tree": "react-tree.js"
+  }
+}
