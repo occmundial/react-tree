@@ -2,7 +2,7 @@
 //TODO: Define use of const vs var
 
 const fileUtil = require('./fileUtil.js');
-const treeDirectory = 'react-tree';
+const targetDir = './documentation/tree';
 
 function getColor (componentName){
     var sum = 0;
@@ -27,18 +27,19 @@ function writeFile(file,contents,loggingLevel){
     }
 }
 
-function createTreeDirectory(){
-    fileUtil.createDir('./react-tree');
-    fileUtil.copyFile('staticFiles/Treant.css','./react-tree/Treant.css',null);
-    fileUtil.copyFile('staticFiles/Treant.js','./react-tree/Treant.js',null);
-    fileUtil.createDir('./react-tree/vendor');
-    fileUtil.copyFile('staticFiles/vendor/jquery.easing.js','./react-tree/vendor/jquery.easing.js',null);
-    fileUtil.copyFile('staticFiles/vendor/jquery.min.js','./react-tree/vendor/jquery.min.js',null);
-    fileUtil.copyFile('staticFiles/vendor/jquery.mousewheel.js','./react-tree/vendor/jquery.mousewheel.js',null);
-    fileUtil.copyFile('staticFiles/vendor/raphael.js','./react-tree/vendor/jquery.raphael.js',null);
-    fileUtil.createDir('./react-tree/vendor/perfectscrollbar');
-    fileUtil.copyFile('staticFiles/vendor/perfectscrollbar/perfect-scrollbar.css','./react-tree/vendor/perfectscrollbar/perfect-scrollbar.css',null);
-    fileUtil.copyFile('staticFiles/vendor/perfectscrollbar/perfect-scrollbar.js','./react-tree/vendor/perfectscrollbar/perfect-scrollbar.js',null);
+function createTreeDirectory(targetDir){
+    fileUtil.createDir('./documentation');
+    fileUtil.createDir(targetDir);
+    fileUtil.copyFile(__dirname+'/staticFiles/Treant.css',targetDir+'/Treant.css',null);
+    fileUtil.copyFile(__dirname+'/staticFiles/Treant.js',targetDir+'/Treant.js',null);
+    fileUtil.createDir(targetDir+'/vendor');
+    fileUtil.copyFile(__dirname+'/staticFiles/vendor/jquery.easing.js',targetDir+'/vendor/jquery.easing.js',null);
+    fileUtil.copyFile(__dirname+'/staticFiles/vendor/jquery.min.js',targetDir+'/vendor/jquery.min.js',null);
+    fileUtil.copyFile(__dirname+'/staticFiles/vendor/jquery.mousewheel.js',targetDir+'/vendor/jquery.mousewheel.js',null);
+    fileUtil.copyFile(__dirname+'/staticFiles/vendor/raphael.js',targetDir+'/vendor/raphael.js',null);
+    fileUtil.createDir(targetDir+'/vendor/perfect-scrollbar');
+    fileUtil.copyFile(__dirname+'/staticFiles/vendor/perfect-scrollbar/perfect-scrollbar.css',targetDir+'/vendor/perfect-scrollbar/perfect-scrollbar.css',null);
+    fileUtil.copyFile(__dirname+'/staticFiles/vendor/perfect-scrollbar/perfect-scrollbar.js',targetDir+'/vendor/perfect-scrollbar/perfect-scrollbar.js',null);
 }
 
 function generateTreeDoc(sourceDir, loggingLevel = 0){
@@ -67,13 +68,9 @@ function generateTreeDoc(sourceDir, loggingLevel = 0){
         console.log('\n>Starting search of react components.');
     }
     for(var i in sourceFiles){
-        var src;
-        try{
-            src = fileUtil.readFile(sourceFiles[i]);
-        }catch (e){
-            console.log('\n>Failed to read file "'+sourceFiles[i]+'".');
-            console.log(e);
-        }
+        var src = fileUtil.readFile(sourceFiles[i]);
+        if(!src)
+            continue;
         var log = '"'+sourceFiles[i]+'"';
         var doc = docUtil.getModuleDoc(src);
         if(doc){
@@ -84,7 +81,7 @@ function generateTreeDoc(sourceDir, loggingLevel = 0){
             );
             var componentName = sourceFiles[i].split('\\').slice(-1)[0];
             componentName = componentName.split('.')[0];
-            doc.component = componentName;
+            doc.component = componentName.replace(/-/g,'');
             docs.push(doc);
             log += ' contains react component "'+componentName+'".';
         }else{
@@ -138,7 +135,7 @@ function generateTreeDoc(sourceDir, loggingLevel = 0){
             currentComponent = currentComponent[0];
             var currentComponentName = currentComponent.text.name+currentComponent.uid;
             var childrenNames = docs[i].imports.map(function(value){
-                return value.name[0];
+                return value.name[0].replace(/-/g,'');;
             });
             var childrenComponents = components.filter(function(value){
                 return childrenNames.includes(value.text.name);
@@ -189,10 +186,15 @@ function generateTreeDoc(sourceDir, loggingLevel = 0){
     configString += parentString;
     configString += treeString;
 
-    createTreeDirectory();
-    writeFile(treeDirectory+'/sourceTree.js',configString,loggingLevel);
-    writeFile(treeDirectory+'/nodeColors.css',cssString,loggingLevel);
-    writeFile(treeDirectory+'/sourceTree.html',htmlString,loggingLevel);
+    createTreeDirectory(targetDir);
+    writeFile(targetDir+'/sourceTree.js',configString,loggingLevel);
+    writeFile(targetDir+'/nodeColors.css',cssString,loggingLevel);
+    writeFile(targetDir+'/sourceTree.html',htmlString,loggingLevel);
 }
 
-exports.generateTree = generateTreeDoc;
+if(process.argv.length < 3){
+    console.log('Missing parameters: Source dir');
+    return -1;
+}
+
+return generateTreeDoc(process.argv[2], process.argv.length > 3 ? process.argv[3] : 0);

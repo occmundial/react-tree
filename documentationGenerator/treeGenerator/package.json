@@ -22,10 +22,14 @@
     "url": "https://github.com/JGFranco/reactTree/issues"
   },
   "homepage": "https://github.com/JGFranco/reactTree#readme",
-  "dependencies": {
+  "devDependencies": {
     "react-docgen": "^2.13.0",
     "react-docgen-exports-handler": "^1.0.0",
     "react-docgen-imports-handler": "^1.0.0"
+  },
+  "peerDependencies": {
+    "react": "^15.2.0",
+    "react-dom": "^15.2.0"
   },
   "bin": {
     "react-tree": "react-tree.js"

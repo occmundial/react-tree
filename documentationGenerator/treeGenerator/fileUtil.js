@@ -5,7 +5,7 @@ const path = require('path');
 const getAllFiles = (dir, filelist = []) => {
     fs.readdirSync(dir).forEach(file => {
         filelist = fs.statSync(path.join(dir, file)).isDirectory()
-            ? getAllFiles(path.join(dir, file), filelist)
+            ? (file!=='node_modules' ? getAllFiles(path.join(dir, file), filelist) : [])
             : filelist.concat(path.join(dir, file));
 });
     return filelist;
@@ -19,12 +19,12 @@ const filterFiles = (fileList, ext) =>{
 
 const readFile = (path) =>{
     try {
-        var filename = require.resolve(__dirname + '/' + path);
+        // var filename = require.resolve(__dirname + '/' + path);
         // console.log(filename);
-        return fs.readFileSync(filename, 'utf8');
+        return fs.readFileSync(path, 'utf8');
     } catch (e) {
-        // console.log(e);
-        return '';
+        console.log(e);
+        return null;
     }
 }
 
@@ -39,9 +39,7 @@ const createDir = (value) => {
 }
 
 //http://stackoverflow.com/questions/11293857/fastest-way-to-copy-file-in-node-js
-const copyFile = (source, target, cb) => {
-    var cbCalled = false;
-
+const copyFile = (source, target) => {
     var rd = fs.createReadStream(source);
     rd.on("error", function(err) {
         done(err);
@@ -56,9 +54,9 @@ const copyFile = (source, target, cb) => {
     rd.pipe(wr);
 
     function done(err) {
-        if (!cbCalled) {
-            cb(err);
-            cbCalled = true;
+        if (err) {
+            console.log(err);
+            return -1;
         }
     }
 }
