@@ -76,12 +76,17 @@ function generateTreeDoc(sourceDir, loggingLevel = 0){
         if(doc){
             doc.imports = doc.imports.map(
                 function(arg){
-                    return {'name': arg.split('/').slice(-1) };
+                    var importFolder = arg.split('/').length > 1 ? arg.split('/').slice(-2)[0]: '';
+                    importFolder = importFolder === '.' ? sourceFiles[i].split('\\').slice(-2)[0] : importFolder;
+                    importFolder !== '' ? importFolder+='_':0;
+                    return {'name': (importFolder +arg.split('/').slice(-1)).replace(/-/g,'') };
                 }
             );
             var componentName = sourceFiles[i].split('\\').slice(-1)[0];
             componentName = componentName.split('.')[0];
-            doc.component = componentName.replace(/-/g,'');
+            componentName = componentName.replace(/-/g,'');
+            componentName = sourceFiles[i].split('\\').slice(-2)[0]+'_'+componentName;
+            doc.component = componentName;
             docs.push(doc);
             log += ' contains react component "'+componentName+'".';
         }else{
@@ -95,7 +100,7 @@ function generateTreeDoc(sourceDir, loggingLevel = 0){
     // http://fperucic.github.io/treant-js/
 
     var configString = 'var chartConfig = {container: "#tree-simple", rootOrientation:"'+rootOrientation+'",';
-    configString += 'levelSeparation:5, siblingSeparation:0,subTeeSeparation:0, connectors: {type: "straight",style: {"stroke-width": 2,"stroke": "#ccc"}}};';
+    configString += 'levelSeparation:5, siblingSeparation:5,subTeeSeparation:5, connectors: {type: "straight",style: {"stroke-width": 2,"stroke": "#ccc"}}};';
     var parentString = '';
     var treeString = 'var tree = [chartConfig,';
     var cssString = 'body{ font-family: "Verdana"; font-size: 16px;} ';
@@ -135,7 +140,7 @@ function generateTreeDoc(sourceDir, loggingLevel = 0){
             currentComponent = currentComponent[0];
             var currentComponentName = currentComponent.text.name+currentComponent.uid;
             var childrenNames = docs[i].imports.map(function(value){
-                return value.name[0].replace(/-/g,'');;
+                return value.name;
             });
             var childrenComponents = components.filter(function(value){
                 return childrenNames.includes(value.text.name);

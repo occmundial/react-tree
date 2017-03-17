@@ -7,10 +7,6 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/JGFranco/reactTree.git"
-  },
   "keywords": [
     "react",
     "tree",
@@ -18,10 +14,6 @@
   ],
   "author": "JGFranco",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/JGFranco/reactTree/issues"
-  },
-  "homepage": "https://github.com/JGFranco/reactTree#readme",
   "devDependencies": {
     "react-docgen": "^2.13.0",
     "react-docgen-exports-handler": "^1.0.0",
