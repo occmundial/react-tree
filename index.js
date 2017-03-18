@@ -197,9 +197,11 @@ function generateTreeDoc(sourceDir, loggingLevel = 0){
     writeFile(targetDir+'/sourceTree.html',htmlString,loggingLevel);
 }
 
-if(process.argv.length < 3){
-    console.log('Missing parameters: Source dir');
-    return -1;
-}
+// if(process.argv.length < 3){
+//     console.log('Missing parameters: Source dir');
+//     return -1;
+// }
 
-return generateTreeDoc(process.argv[2], process.argv.length > 3 ? process.argv[3] : 0);
+// return generateTreeDoc(process.argv[2], process.argv.length > 3 ? process.argv[3] : 0);
+
+exports.generateTreeDoc = generateTreeDoc;
