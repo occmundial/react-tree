@@ -22,8 +22,5 @@
   "peerDependencies": {
     "react": "^15.2.0",
     "react-dom": "^15.2.0"
-  },
-  "bin": {
-    "react-tree": "react-tree.js"
   }
 }
