@@ -14,7 +14,7 @@
   ],
   "author": "JGFranco",
   "license": "MIT",
-  "devDependencies": {
+  "dependencies": {
     "react-docgen": "^2.13.0",
     "react-docgen-exports-handler": "^1.0.0",
     "react-docgen-imports-handler": "^1.0.0"
