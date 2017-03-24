@@ -84,8 +84,8 @@ function generateTreeDoc(sourceDir, loggingLevel = 0){
             );
             var componentName = sourceFiles[i].split('\\').slice(-1)[0];
             componentName = componentName.split('.')[0];
-            componentName = componentName.replace(/-/g,'');
             componentName = sourceFiles[i].split('\\').length > 1 ? sourceFiles[i].split('\\').slice(-2)[0]+'_'+componentName : componentName;
+            componentName = componentName.replace(/-/g,'');
             doc.component = componentName;
             docs.push(doc);
             log += ' contains react component "'+componentName+'".';
