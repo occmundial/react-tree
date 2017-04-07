@@ -152,7 +152,6 @@ function generateTreeDoc(sourceDir, loggingLevel = 0, includeExternals = false){
             var childrenComponents = components.filter(function(value){
                 return childrenNames.includes(value.text.name);
             });
-            loggingLevel > 1 ? console.log('Of which '+childrenComponents.length+' is/are (a) source component(s).'):0;
             if(includeExternals){
                 var externalComponents = docs[i].imports.filter(function(value){
                     return !childrenNames.includes(value);
@@ -160,20 +159,21 @@ function generateTreeDoc(sourceDir, loggingLevel = 0, includeExternals = false){
                 externalComponents.map(function(value){
                     var externalClone = {
                         text: {
-                            name: value
+                            name: value.name
                         },
                         uid: components.length+newComponents.length,
                         parent: currentComponentName
                     };
-                    var newCSSClass = '.'+componentName+' {color:'+getColor(componentName)+'} ';
+                    var newCSSClass = '.'+value.name+' {color:'+getColor(value.name)+'} ';
                     cssString += newCSSClass;
                     newComponents.push(externalClone);
                     if(loggingLevel > 1) {
-                        console.log('"'+value+'" added as an external component.');
+                        console.log('"'+value.name+'" added as an external component.');
                         console.log('Created css class: "'+newCSSClass+"'");
                     }
                 });
             }
+            loggingLevel > 1 ? console.log('Of which '+childrenComponents.length+' is/are (a) source component(s).'):0;
             childrenComponents.map(function(value){
                 if (!value.parent){
                     loggingLevel > 1 ? console.log('Adding "'+currentComponent.text.name+'" as parent of "'+value.text.name+'".'):0;
