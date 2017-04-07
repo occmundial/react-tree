@@ -42,7 +42,7 @@ function createTreeDirectory(targetDir){
     fileUtil.copyFile(__dirname+'/staticFiles/vendor/perfect-scrollbar/perfect-scrollbar.js',targetDir+'/vendor/perfect-scrollbar/perfect-scrollbar.js',null);
 }
 
-function generateTreeDoc(sourceDir, loggingLevel = 0){
+function generateTreeDoc(sourceDir, loggingLevel = 0, includeExternals = false){
 
     if(!sourceDir){
         console.log('\nreactTree>Source directory must be specified.')
@@ -129,7 +129,6 @@ function generateTreeDoc(sourceDir, loggingLevel = 0){
         //For every component importing another one
         if(docs[i].imports != null){
             loggingLevel > 1 ? console.log('\n>Found '+docs[i].imports.length+' import(s) on "'+docs[i].component+'".'):0;
-            //For every child/imported component
             var currentComponent = components.filter(function(value){
                 return value.text.name === docs[i].component;
             });
@@ -139,6 +138,7 @@ function generateTreeDoc(sourceDir, loggingLevel = 0){
             }
             currentComponent = currentComponent[0];
             var currentComponentName = currentComponent.text.name+currentComponent.uid;
+            //For every child/imported component
             var childrenNames = docs[i].imports.map(function(value){
                 return value.name;
             });
@@ -146,6 +146,27 @@ function generateTreeDoc(sourceDir, loggingLevel = 0){
                 return childrenNames.includes(value.text.name);
             });
             loggingLevel > 1 ? console.log('Of which '+childrenComponents.length+' is/are (a) source component(s).'):0;
+            if(includeExternals){
+                var externalComponents = docs[i].imports.filter(function(value){
+                    return !childrenNames.includes(value);
+                });
+                externalComponents.map(function(value){
+                    var externalClone = {
+                        text: {
+                            name: value
+                        },
+                        uid: components.length+newComponents.length,
+                        parent: currentComponentName
+                    };
+                    var newCSSClass = '.'+componentName+' {color:'+getColor(componentName)+'} ';
+                    cssString += newCSSClass;
+                    newComponents.push(externalClone);
+                    if(loggingLevel > 1) {
+                        console.log('"'+value+'" added as an external component.');
+                        console.log('Created css class: "'+newCSSClass+"'");
+                    }
+                });
+            }
             childrenComponents.map(function(value){
                 if (!value.parent){
                     loggingLevel > 1 ? console.log('Adding "'+currentComponent.text.name+'" as parent of "'+value.text.name+'".'):0;
