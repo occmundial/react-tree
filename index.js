@@ -44,6 +44,13 @@ function createTreeDirectory(targetDir){
 
 function generateTreeDoc(sourceDir, loggingLevel = 0, includeExternals = false){
 
+    if(loggingLevel > 0){
+        console.log('\n>Enabled logging level '+loggingLevel+'.');
+        includingExternals ?
+            console.log('\n>Including external components.')
+            :console.log('\n>Excluding external components.');
+    }
+
     if(!sourceDir){
         console.log('\nreactTree>Source directory must be specified.')
         return -1;
