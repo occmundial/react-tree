@@ -6,4 +6,4 @@ if(process.argv.length < 3){
     return -1;
 }
 
-reactTree.generateTreeDoc(process.argv[2], process.argv.length > 3 ? process.argv[3] : 0);
+reactTree.generateTreeDoc(process.argv[2], process.argv.length > 3 ? process.argv[3] : 0, process.argv.length > 4 ? process.argv[4] : false);
