@@ -86,13 +86,13 @@ function generateTreeDoc(sourceDir, loggingLevel = 0, includeExternals = false){
                     var importFolder = arg.split('/').length > 1 ? arg.split('/').slice(-2)[0]: '';
                     importFolder = importFolder === '.' ? sourceFiles[i].split('\\').slice(-2)[0] : importFolder;
                     importFolder !== '' ? importFolder+='_':0;
-                    return {'name': (importFolder +arg.split('/').slice(-1)).replace(/-/g,'') };
+                    return {'name': (importFolder +arg.split('/').slice(-1)).replace(/-/g,'').replace(/./g,'') };
                 }
             );
             var componentName = sourceFiles[i].split('\\').slice(-1)[0];
             componentName = componentName.split('.')[0];
             componentName = sourceFiles[i].split('\\').length > 1 ? sourceFiles[i].split('\\').slice(-2)[0]+'_'+componentName : componentName;
-            componentName = componentName.replace(/-/g,'');
+            componentName = componentName.replace(/-/g,'').replace(/./g,'');
             doc.component = componentName;
             docs.push(doc);
             log += ' contains react component "'+componentName+'".';
