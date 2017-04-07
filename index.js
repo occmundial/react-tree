@@ -46,7 +46,7 @@ function generateTreeDoc(sourceDir, loggingLevel = 0, includeExternals = false){
 
     if(loggingLevel > 0){
         console.log('\n>Enabled logging level '+loggingLevel+'.');
-        includingExternals ?
+        includeExternals ?
             console.log('\n>Including external components.')
             :console.log('\n>Excluding external components.');
     }
