@@ -2,7 +2,7 @@
 //TODO: Define use of const vs var
 
 const fileUtil = require('./fileUtil.js');
-const targetDir = './documentation/tree';
+const targetDir = './react-tree';
 
 function getColor (componentName){
     var sum = 0;
@@ -28,7 +28,6 @@ function writeFile(file,contents,loggingLevel){
 }
 
 function createTreeDirectory(targetDir){
-    fileUtil.createDir('./documentation');
     fileUtil.createDir(targetDir);
     fileUtil.copyFile(__dirname+'/staticFiles/Treant.css',targetDir+'/Treant.css',null);
     fileUtil.copyFile(__dirname+'/staticFiles/Treant.js',targetDir+'/Treant.js',null);
