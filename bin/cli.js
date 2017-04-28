@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-reactTree = require('../index.js');
+reactTree = require('../src/index.js');
 
 if(process.argv.length < 3){
     console.log('Missing parameters: Source dir');
