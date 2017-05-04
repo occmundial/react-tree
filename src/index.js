@@ -43,6 +43,8 @@ function createTreeDirectory(targetDir){
 
 function generateTreeDoc(sourceDir, loggingLevel = 0, includeExternals = false){
 
+    const stringUtil = require('./stringUtil');
+
     if(loggingLevel > 0){
         console.log('\n>Enabled logging level '+loggingLevel+'.');
         includeExternals ?
@@ -82,19 +84,13 @@ function generateTreeDoc(sourceDir, loggingLevel = 0, includeExternals = false){
         if(doc){
             doc.imports = doc.imports.map(
                 function(arg){
-                    var importFolder = arg.split('/').length > 1 ? arg.split('/').slice(-2)[0]: '';
-                    importFolder = importFolder === '.' ? sourceFiles[i].split('\\').slice(-2)[0] : importFolder;
-                    importFolder !== '' ? importFolder+='_':0;
-                    return {'name': (importFolder +arg.split('/').slice(-1)).replace(/-/g,'').replace(/\./g,'') };
+                    return {'name': arg};
                 }
             );
-            var componentName = sourceFiles[i].split('\\').slice(-1)[0];
-            componentName = componentName.split('.')[0];
-            componentName = sourceFiles[i].split('\\').length > 1 ? sourceFiles[i].split('\\').slice(-2)[0]+'_'+componentName : componentName;
-            componentName = componentName.replace(/-/g,'').replace(/\./g,'');
-            doc.component = componentName;
+            doc.component = stringUtil.getModuleName(sourceFiles[i],'_').replace(/-/g,'').replace(/\./g,'');
+            doc.path = sourceFiles[i];
             docs.push(doc);
-            log += ' contains react component "'+componentName+'".';
+            log += ' contains react component "'+doc.component+'".';
         }else{
             log += ' does not contain a react component.';
         }
@@ -131,9 +127,13 @@ function generateTreeDoc(sourceDir, loggingLevel = 0, includeExternals = false){
     var newComponents = [];
     loggingLevel > 1 ? console.log('\n>Defining tree structure.'):0;
 
+    const path = require('path');
+
     for (var i in docs){
         //For every component importing another one
         if(docs[i].imports != null){
+            console.log('=====================');
+            console.log(docs[i].path.split('\\').slice(0,-1).join('\\'));
             loggingLevel > 1 ? console.log('\n>Found '+docs[i].imports.length+' import(s) on "'+docs[i].component+'".'):0;
             var currentComponent = components.filter(function(value){
                 return value.text.name === docs[i].component;
@@ -146,6 +146,7 @@ function generateTreeDoc(sourceDir, loggingLevel = 0, includeExternals = false){
             var currentComponentName = currentComponent.text.name+currentComponent.uid;
             //For every child/imported component
             var childrenNames = docs[i].imports.map(function(value){
+                console.log(docs[i].imports);
                 return value.name;
             });
             var childrenComponents = components.filter(function(value){
