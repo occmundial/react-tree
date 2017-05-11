@@ -6,7 +6,6 @@ const targetDir = './react-tree';
 const moduleSeparator = '_';
 
 function getColor (componentName){
-    console.log(componentName);
     var sum = 0;
     componentName.split('').forEach(function (value){
         sum += value.charCodeAt(0);
@@ -141,19 +140,17 @@ function generateTreeDoc(sourceDir, loggingLevel = 0, includeExternals = false){
             //For every child/imported component
             var currentFolder = path.dirname(path.resolve(currentDoc.path,'.'));
             var childrenPaths = currentDoc.imports.map(function(value){
-                return stringUtil.removeIndexJS(path.resolve(currentFolder,value.name));
+                return stringUtil.removeJS(stringUtil.removeIndexJS(path.resolve(currentFolder,value.name)));
             });
             var childrenComponents = components.filter(function(value){
-                var componentPath = stringUtil.removeIndexJS(path.resolve(value.doc.path));
+                var componentPath = stringUtil.removeJS(stringUtil.removeIndexJS(path.resolve(value.doc.path)));
                 return childrenPaths.includes(componentPath);
             });
             if(includeExternals){
                 var externalComponents = currentDoc.imports.filter(function(value){
-                    console.log(value);
-                    var componentPath = stringUtil.removeIndexJS(path.resolve(value.name));
+                    var componentPath = stringUtil.removeJS(stringUtil.removeIndexJS(path.resolve(value.name)));
                     return !childrenPaths.includes(componentPath);
                 });
-                // console.log(externalComponents);
                 externalComponents.map(function(value){
                     var externalClone = {
                         text: {
@@ -221,6 +218,8 @@ function generateTreeDoc(sourceDir, loggingLevel = 0, includeExternals = false){
     writeFile(targetDir+'/sourceTree.js',configString,loggingLevel);
     writeFile(targetDir+'/nodeColors.css',cssString,loggingLevel);
     writeFile(targetDir+'/sourceTree.html',htmlString,loggingLevel);
+
+    console.log('\n>'+(components.length+newComponents.length)+' tree node(s) created on '+targetDir);
 }
 
 exports.generateTreeDoc = generateTreeDoc;

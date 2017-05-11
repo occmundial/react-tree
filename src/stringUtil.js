@@ -22,7 +22,16 @@ function removeIndexJS(pathName){
     return dirTree.join('/');
 }
 
+function removeJS(pathName){
+    var dirTree = pathName.split('.');
+    if (dirTree[dirTree.length-1] == 'js' || dirTree[dirTree.length-1] == 'jsx'){
+        dirTree = dirTree.slice(0,dirTree.length-1);
+    }
+    return dirTree.join('.');
+}
+
 module.exports = {
     getModuleName: getModuleName,
-    removeIndexJS: removeIndexJS
+    removeIndexJS: removeIndexJS,
+    removeJS: removeJS
 }
