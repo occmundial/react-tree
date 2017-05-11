@@ -3,8 +3,10 @@
 
 const fileUtil = require('./fileUtil.js');
 const targetDir = './react-tree';
+const moduleSeparator = '_';
 
 function getColor (componentName){
+    console.log(componentName);
     var sum = 0;
     componentName.split('').forEach(function (value){
         sum += value.charCodeAt(0);
@@ -87,7 +89,7 @@ function generateTreeDoc(sourceDir, loggingLevel = 0, includeExternals = false){
                     return {'name': arg};
                 }
             );
-            doc.component = stringUtil.getModuleName(sourceFiles[i],'_').replace(/-/g,'').replace(/\./g,'');
+            doc.component = stringUtil.getModuleName(sourceFiles[i],moduleSeparator).replace(/-/g,'').replace(/\./g,'');
             doc.path = sourceFiles[i];
             docs.push(doc);
             log += ' contains react component "'+doc.component+'".';
@@ -117,7 +119,7 @@ function generateTreeDoc(sourceDir, loggingLevel = 0, includeExternals = false){
 
     for (var i in docs){
         var componentName = docs[i].component;
-        var currentComponent = { text: {name : componentName} , uid:i};
+        var currentComponent = { text: {name : componentName} , uid:i, doc:docs[i]};
         var newCSSClass = '.'+componentName+' {color:'+getColor(componentName)+'} ';
         cssString += newCSSClass;
         loggingLevel > 1 ? console.log(newCSSClass):0;
@@ -129,42 +131,38 @@ function generateTreeDoc(sourceDir, loggingLevel = 0, includeExternals = false){
 
     const path = require('path');
 
-    for (var i in docs){
+    for (var i in components){
         //For every component importing another one
-        if(docs[i].imports != null){
-            console.log('=====================');
-            console.log(docs[i].path.split('\\').slice(0,-1).join('\\'));
-            loggingLevel > 1 ? console.log('\n>Found '+docs[i].imports.length+' import(s) on "'+docs[i].component+'".'):0;
-            var currentComponent = components.filter(function(value){
-                return value.text.name === docs[i].component;
-            });
-            if(currentComponent === null || currentComponent.length !== 1){
-                loggingLevel > 1 ? console.log('Failed to find "'+docs[i].component+'" on component list.'):0;
-                continue;
-            }
-            currentComponent = currentComponent[0];
+        var currentComponent = components[i];
+        var currentDoc = currentComponent.doc;
+        if(currentDoc.imports != null){
+            loggingLevel > 1 ? console.log('\n>Found '+currentDoc.imports.length+' import(s) on "'+currentDoc.component+'".'):0;
             var currentComponentName = currentComponent.text.name+currentComponent.uid;
             //For every child/imported component
-            var childrenNames = docs[i].imports.map(function(value){
-                console.log(docs[i].imports);
-                return value.name;
+            var currentFolder = path.dirname(path.resolve(currentDoc.path,'.'));
+            var childrenPaths = currentDoc.imports.map(function(value){
+                return stringUtil.removeIndexJS(path.resolve(currentFolder,value.name));
             });
             var childrenComponents = components.filter(function(value){
-                return childrenNames.includes(value.text.name);
+                var componentPath = stringUtil.removeIndexJS(path.resolve(value.doc.path));
+                return childrenPaths.includes(componentPath);
             });
             if(includeExternals){
-                var externalComponents = docs[i].imports.filter(function(value){
-                    return !childrenNames.includes(value);
+                var externalComponents = currentDoc.imports.filter(function(value){
+                    console.log(value);
+                    var componentPath = stringUtil.removeIndexJS(path.resolve(value.name));
+                    return !childrenPaths.includes(componentPath);
                 });
+                // console.log(externalComponents);
                 externalComponents.map(function(value){
                     var externalClone = {
                         text: {
-                            name: value.name
+                            name:  stringUtil.getModuleName(value.name,moduleSeparator).replace(/-/g,'').replace(/\./g,'')
                         },
                         uid: components.length+newComponents.length,
                         parent: currentComponentName
                     };
-                    var newCSSClass = '.'+value.name+' {color:'+getColor(value.name)+'} ';
+                    var newCSSClass = '.'+externalClone.text.name+' {color:'+getColor(externalClone.text.name)+'} ';
                     cssString += newCSSClass;
                     newComponents.push(externalClone);
                     if(loggingLevel > 1) {
@@ -194,7 +192,7 @@ function generateTreeDoc(sourceDir, loggingLevel = 0, includeExternals = false){
                 }
             });
         }else{
-            loggingLevel > 1 ? console.log('Found no imports on "'+docs[i].component+'".'):0;
+            loggingLevel > 1 ? console.log('Found no imports on "'+currentDoc.component+'".'):0;
         }
     }
 

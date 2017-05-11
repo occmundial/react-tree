@@ -27,7 +27,13 @@ describe('getModuleName', () => {
     });
 
     test('Different level folder', ()=>{
-        var arg = '..\\..\\src\\components\\react';
+        var arg = 'src\\containers\\index.js';
+        var result = 'src_containers';
+        expect(stringUtil.getModuleName(arg,'_')).toEqual(result);
+    });
+
+    test('Different level folder', ()=>{
+        var arg = '../../src/components/react';
         var result = 'src_components_react';
         expect(stringUtil.getModuleName(arg,'_')).toEqual(result);
     });
