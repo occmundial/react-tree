@@ -6,7 +6,7 @@ Usage
 Add on dependencies directly from github
 
 ```jsx
-  "react-tree": "git+https://github.com/occmundial/react-tree/edit/master/README.md"
+  "react-tree": "git+https://github.com/occmundial/react-tree"
 ```
 
 Add a script to run it on package.json
