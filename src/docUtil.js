@@ -19,8 +19,8 @@ const getModuleDoc = (moduleSrc) => {
     } catch (e) {
         return null;
     }
-}
+};
 
 module.exports = {
     getModuleDoc: getModuleDoc
-}
+};

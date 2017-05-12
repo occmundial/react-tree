@@ -54,7 +54,7 @@ function generateTreeDoc(sourceDir, loggingLevel = 0, includeExternals = false){
     }
 
     if(!sourceDir){
-        console.log('\nreactTree>Source directory must be specified.')
+        console.log('\nreactTree>Source directory must be specified.');
         return -1;
     }
     const docUtil = require('./docUtil.js');

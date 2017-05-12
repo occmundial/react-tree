@@ -34,4 +34,4 @@ module.exports = {
     getModuleName: getModuleName,
     removeIndexJS: removeIndexJS,
     removeJS: removeJS
-}
+};
