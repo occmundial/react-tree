@@ -154,7 +154,7 @@ function generateTreeDoc(sourceDir, loggingLevel = 0, includeExternals = false){
                 externalComponents.map(function(value){
                     var externalClone = {
                         text: {
-                            name:  stringUtil.getModuleName(value.name,moduleSeparator).replace(/-/g,'').replace(/\./g,'')
+                            name:  stringUtil.getModuleName(value.name,moduleSeparator).replace(/-/g,'').replace(/\./g,'').replace(/^[^A-Za-z_$]/g,'')
                         },
                         uid: components.length+newComponents.length,
                         parent: currentComponentName
