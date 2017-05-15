@@ -54,7 +54,7 @@ function generateTreeDoc(sourceDir, loggingLevel = 0, includeExternals = false){
     }
 
     if(!sourceDir){
-        console.log('\nreactTree>Source directory must be specified.')
+        console.log('\nreactTree>Source directory must be specified.');
         return -1;
     }
     const docUtil = require('./docUtil.js');
@@ -154,7 +154,7 @@ function generateTreeDoc(sourceDir, loggingLevel = 0, includeExternals = false){
                 externalComponents.map(function(value){
                     var externalClone = {
                         text: {
-                            name:  stringUtil.getModuleName(value.name,moduleSeparator).replace(/-/g,'').replace(/\./g,'')
+                            name:  stringUtil.getModuleName(value.name,moduleSeparator).replace(/-/g,'').replace(/\./g,'').replace(/^[^A-Za-z_$]/g,'')
                         },
                         uid: components.length+newComponents.length,
                         parent: currentComponentName

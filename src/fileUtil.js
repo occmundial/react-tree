@@ -9,13 +9,13 @@ const getAllFiles = (dir, filelist = []) => {
             : filelist.concat(path.join(dir, file));
 });
     return filelist;
-}
+};
 
 const filterFiles = (fileList, ext) =>{
     return fileList.filter((fileName) => {
             return fileName.split('.').slice(-1)[0] === ext;
 });
-}
+};
 
 const readFile = (path) =>{
     try {
@@ -26,17 +26,17 @@ const readFile = (path) =>{
         console.log(e);
         return null;
     }
-}
+};
 
 const writeFile = (path, value) => {
     fs.writeFileSync(path, value, 'utf8');
-}
+};
 
 const createDir = (value) => {
     if (!fs.existsSync(value)){
         fs.mkdirSync(value);
     }
-}
+};
 
 //http://stackoverflow.com/questions/11293857/fastest-way-to-copy-file-in-node-js
 const copyFile = (source, target) => {
@@ -59,7 +59,7 @@ const copyFile = (source, target) => {
             return -1;
         }
     }
-}
+};
 
 module.exports = {
     getAllFiles: getAllFiles,
@@ -68,4 +68,4 @@ module.exports = {
     writeFile: writeFile,
     createDir: createDir,
     copyFile: copyFile
-}
+};
