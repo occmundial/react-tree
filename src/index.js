@@ -88,7 +88,7 @@ function generateTreeDoc(sourceDir, loggingLevel = 0, includeExternals = false){
                     return {'name': arg};
                 }
             );
-            doc.component = stringUtil.getModuleName(sourceFiles[i],moduleSeparator).replace(/-/g,'').replace(/\./g,'');
+            doc.component = stringUtil.getModuleName(sourceFiles[i],moduleSeparator).replace(/-/g,'').replace(/\./g,'').replace(/^[^A-Za-z_$]/g,'');
             doc.path = sourceFiles[i];
             docs.push(doc);
             log += ' contains react component "'+doc.component+'".';
